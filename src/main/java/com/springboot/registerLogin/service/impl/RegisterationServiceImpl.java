@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.springboot.registerLogin.dao.RegisterUserRepository;
 import com.springboot.registerLogin.entity.Users;
+import com.springboot.registerLogin.request.PasswordResetDto;
 import com.springboot.registerLogin.request.UserLoginRequestDto;
 import com.springboot.registerLogin.request.UserRegisterationRequestDto;
 import com.springboot.registerLogin.service.RegisterationService;
@@ -34,9 +35,9 @@ public class RegisterationServiceImpl implements RegisterationService {
 
 	@Override
 	public String registerUser(UserRegisterationRequestDto userRegistrationRequestDto) {
-		System.out.println("User email coming as data: " + userRegistrationRequestDto.getEmail()); // Debugging
+//		System.out.println("User email coming as data: " + userRegistrationRequestDto.getEmail()); // Debugging
 		Users user = modelMapper.map(userRegistrationRequestDto, Users.class);
-		System.out.println("Mapped User Email: " + user.getEmail()); // Debugging
+//		System.out.println("Mapped User Email: " + user.getEmail()); // Debugging
 		registerUserRepository.save(user);
 		return "User has been created.";
 	}
@@ -79,4 +80,22 @@ public class RegisterationServiceImpl implements RegisterationService {
 			return "User not found.";
 		}
 	}
+	
+	
+	 @Override
+	 public String resetPassword(PasswordResetDto passwordResetDto) {
+	        Optional<Users> optionalUser = registerUserRepository.findByEmail(passwordResetDto.getEmail());
+	        if (optionalUser.isPresent()) {
+	            Users user = optionalUser.get();
+	            if (passwordResetDto.getCurrentPassword().equals(user.getPassword())) {
+	                user.setPassword(passwordResetDto.getNewPassword());
+	                registerUserRepository.save(user);
+	                return "Password has been reset successfully.";
+	            } else {
+	                return "Current password is incorrect.";
+	            }
+	        } else {
+	            return "User not found.";
+	        }
+	    }
 }
