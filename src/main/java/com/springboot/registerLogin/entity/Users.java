@@ -9,7 +9,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "users")
@@ -24,34 +23,31 @@ public class Users implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
 	private Long id;
-	
+
 	@Column(nullable = false, unique = true)
-	 private String email;
-	
+	private String email;
 
 	@Column(nullable = false)
 	private String firstName;
- 
+
 	@Column
 	private String lastName;
 
 	@Column
 	private String phoneNumber;
-	
+
 	@Column
 	private boolean isBlocked;
-	
+
 	@Column
 	private LocalDateTime blockedDate;
 
 	@Column
 	private Integer numberOfAttempts;
-	
+
 	@Column
 	private String password;
-	
 
-	
 	public String getPassword() {
 		return password;
 	}
