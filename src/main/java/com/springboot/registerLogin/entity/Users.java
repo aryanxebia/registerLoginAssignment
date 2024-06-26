@@ -47,8 +47,19 @@ public class Users implements Serializable {
 
 	@Column
 	private Integer numberOfAttempts;
+	
+	@Column
+	private String password;
 
 	
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public boolean isBlocked() {
 		return isBlocked;
 	}
