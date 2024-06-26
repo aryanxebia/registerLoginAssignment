@@ -3,6 +3,7 @@ package com.springboot.registerLogin.service.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,52 +16,67 @@ import com.springboot.registerLogin.request.UserLoginRequestDto;
 import com.springboot.registerLogin.request.UserRegisterationRequestDto;
 import com.springboot.registerLogin.service.RegisterationService;
 
-
- 
 @Service
 public class RegisterationServiceImpl implements RegisterationService {
 
-    private final RegisterUserRepository registerUserRepository;
-    private final ModelMapper modelMapper;
+	private static final int MAX_ATTEMPTS = 5;
+	private static final int BLOCK_DURATION_HOURS = 24;
 
-    @Autowired
-    public RegisterationServiceImpl(RegisterUserRepository registerUserRepository, ModelMapper modelMapper) {
-        super();
-        this.registerUserRepository = registerUserRepository;
-        this.modelMapper = modelMapper;
-    }
+	private final RegisterUserRepository registerUserRepository;
+	private final ModelMapper modelMapper;
 
-    @Override
-    public String registerUser(  UserRegisterationRequestDto userRegistrationRequestDto) {
-    	System.out.println("User email coming as data: " + userRegistrationRequestDto.getEmail());  // Debugging
-        Users user = modelMapper.map(userRegistrationRequestDto, Users.class);
-        System.out.println("Mapped User Email: " + user.getEmail());  // Debugging
-        registerUserRepository.save(user);
-        return "User has been created.";
-    }
+	@Autowired
+	public RegisterationServiceImpl(RegisterUserRepository registerUserRepository, ModelMapper modelMapper) {
+		super();
+		this.registerUserRepository = registerUserRepository;
+		this.modelMapper = modelMapper;
+	}
+
+	@Override
+	public String registerUser(UserRegisterationRequestDto userRegistrationRequestDto) {
+		System.out.println("User email coming as data: " + userRegistrationRequestDto.getEmail()); // Debugging
+		Users user = modelMapper.map(userRegistrationRequestDto, Users.class);
+		System.out.println("Mapped User Email: " + user.getEmail()); // Debugging
+		registerUserRepository.save(user);
+		return "User has been created.";
+	}
 
 	@Override
 	public List<Users> getAllUsers() {
-		 return registerUserRepository.findAll();
+		return registerUserRepository.findAll();
 	}
 
-	
-	@Override
 	public String loginUser(UserLoginRequestDto userLoginRequestDto) {
 		Optional<Users> optionalUser = registerUserRepository.findByEmail(userLoginRequestDto.getEmail());
-        if (optionalUser.isPresent()) {
-            Users user = optionalUser.get();
-            if (userLoginRequestDto.getPassword().equals(user.getPassword())) {
-                // Authentication successful
-                return "User logged in successfully.";
-            } else {
-                // Incorrect password
-                return "Invalid credentials.";
-            }
-        } else {
-            // User not found
-            return "User not found.";
-        }
-	
+		if (optionalUser.isPresent()) {
+			Users user = optionalUser.get();
+			if (user.isBlocked()) {
+				if (user.getBlockedDate().plusHours(BLOCK_DURATION_HOURS).isBefore(LocalDateTime.now())) {
+					// Unblock the user after block duration
+					user.setBlocked(false);
+					user.setNumberOfAttempts(0);
+					user.setBlockedDate(null);
+				} else {
+					return "User is blocked. Please try again later.";
+				}
+			}
+			if (userLoginRequestDto.getPassword().equals(user.getPassword())) {
+				// Reset attempts on successful login
+				user.setNumberOfAttempts(0);
+				registerUserRepository.save(user);
+				return "User logged in successfully.";
+			} else {
+				// Increment attempts on failed login
+				user.setNumberOfAttempts(user.getNumberOfAttempts() + 1);
+				if (user.getNumberOfAttempts() >= MAX_ATTEMPTS) {
+					user.setBlocked(true);
+					user.setBlockedDate(LocalDateTime.now());
+				}
+				registerUserRepository.save(user);
+				return "Invalid credentials.";
+			}
+		} else {
+			return "User not found.";
+		}
 	}
 }

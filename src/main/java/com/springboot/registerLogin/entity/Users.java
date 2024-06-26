@@ -26,7 +26,7 @@ public class Users implements Serializable {
 	@Column
 	private Long id;
 	
-	 @NotNull
+	@Column(nullable = false, unique = true)
 	 private String email;
 	
 
@@ -50,6 +50,7 @@ public class Users implements Serializable {
 	
 	@Column
 	private String password;
+	
 
 	
 	public String getPassword() {
