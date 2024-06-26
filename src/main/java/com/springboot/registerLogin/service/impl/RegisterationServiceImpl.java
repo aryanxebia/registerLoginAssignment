@@ -47,55 +47,6 @@ public class RegisterationServiceImpl implements RegisterationService {
 		return registerUserRepository.findAll();
 	}
 
-	public String loginUser(UserLoginRequestDto userLoginRequestDto) {
-		Optional<Users> optionalUser = registerUserRepository.findByEmail(userLoginRequestDto.getEmail());
-		if (optionalUser.isPresent()) {
-			Users user = optionalUser.get();
-			if (user.isBlocked()) {
-				if (user.getBlockedDate().plusHours(BLOCK_DURATION_HOURS).isBefore(LocalDateTime.now())) {
-					// Unblock the user after block duration
-					user.setBlocked(false);
-					user.setNumberOfAttempts(0);
-					user.setBlockedDate(null);
-				} else {
-					return "User is blocked. Please try again later.";
-				}
-			}
-			if (userLoginRequestDto.getPassword().equals(user.getPassword())) {
-				// Reset attempts on successful login
-				user.setNumberOfAttempts(0);
-				registerUserRepository.save(user);
-				return "User logged in successfully.";
-			} else {
-				// Increment attempts on failed login
-				user.setNumberOfAttempts(user.getNumberOfAttempts() + 1);
-				if (user.getNumberOfAttempts() >= MAX_ATTEMPTS) {
-					user.setBlocked(true);
-					user.setBlockedDate(LocalDateTime.now());
-				}
-				registerUserRepository.save(user);
-				return "Invalid credentials.";
-			}
-		} else {
-			return "User not found.";
-		}
-	}
 	
-	
-	 @Override
-	 public String resetPassword(PasswordResetDto passwordResetDto) {
-	        Optional<Users> optionalUser = registerUserRepository.findByEmail(passwordResetDto.getEmail());
-	        if (optionalUser.isPresent()) {
-	            Users user = optionalUser.get();
-	            if (passwordResetDto.getCurrentPassword().equals(user.getPassword())) {
-	                user.setPassword(passwordResetDto.getNewPassword());
-	                registerUserRepository.save(user);
-	                return "Password has been reset successfully.";
-	            } else {
-	                return "Current password is incorrect.";
-	            }
-	        } else {
-	            return "User not found.";
-	        }
-	    }
+	 
 }

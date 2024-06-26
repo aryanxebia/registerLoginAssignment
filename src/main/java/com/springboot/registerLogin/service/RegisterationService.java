@@ -12,7 +12,7 @@ public interface RegisterationService {
 
 	List<Users> getAllUsers();
 
-	String loginUser(UserLoginRequestDto userLoginRequestDto);
+//	String loginUser(UserLoginRequestDto userLoginRequestDto);
 
-	String resetPassword(PasswordResetDto passwordResetDto);
+//	String resetPassword(PasswordResetDto passwordResetDto);
 }

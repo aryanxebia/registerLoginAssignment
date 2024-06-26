@@ -15,34 +15,30 @@ import com.springboot.registerLogin.entity.Users;
 import com.springboot.registerLogin.request.PasswordResetDto;
 import com.springboot.registerLogin.request.UserLoginRequestDto;
 import com.springboot.registerLogin.request.UserRegisterationRequestDto;
-
+import com.springboot.registerLogin.service.LoginService;
 import com.springboot.registerLogin.service.RegisterationService;
 
 import jakarta.validation.Valid;
 
 @RequestMapping("/api/v1/")
 @RestController
-public class RegistrationController {
+public class LoginController {
 
-	private final RegisterationService registerationService;
+	private final LoginService loginService;
 
 	@Autowired
-	public RegistrationController(RegisterationService registerationService) {
-		super();
-		this.registerationService = registerationService;
+	public LoginController(LoginService loginService) {
+		this.loginService = loginService;
 	}
 
-	@PostMapping("register")
-	public ResponseEntity<String> registerUser(
-			 @org.springframework.web.bind.annotation.RequestBody UserRegisterationRequestDto userRegistrationRequestDto) {
-		String response = registerationService.registerUser(userRegistrationRequestDto);
-		return ResponseEntity.status(HttpStatus.CREATED).body(response);
-	}
-
-	@GetMapping("/all")
-	public ResponseEntity<List<Users>> getAllUsers() {
-		List<Users> users = registerationService.getAllUsers();
-		return ResponseEntity.status(HttpStatus.OK).body(users);
+	@PostMapping("/login")
+	public ResponseEntity<String> loginUser(@Valid @RequestBody UserLoginRequestDto userLoginDto) {
+		String response = loginService.loginUser(userLoginDto);
+		if (response.equals("User logged in successfully.")) {
+			return ResponseEntity.status(HttpStatus.OK).body(response);
+		} else {
+			return ResponseEntity.status(401).body(response);
+		}
 	}
 
 }

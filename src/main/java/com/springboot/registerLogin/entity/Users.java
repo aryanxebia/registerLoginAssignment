@@ -10,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "users")
@@ -32,7 +31,7 @@ public class Users implements Serializable {
 
 	@Column(nullable = false)
 	private String firstName;
-
+ 
 	@Column
 	private String lastName;
 
