@@ -2,10 +2,14 @@ package com.springboot.registerLogin.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.registerLogin.exception.RegisterLoginException;
-import com.springboot.registerLogin.request.PasswordResetDto;
+import com.springboot.registerLogin.request.ResetPasswordDto;
+import com.springboot.registerLogin.request.VerifyOtpDto;
 import com.springboot.registerLogin.service.ResetPasswordService;
 
 import jakarta.validation.Valid;
@@ -21,8 +25,16 @@ public class ResetPasswordController {
 		this.resetPasswordService = resetPasswordService;
 	}
 
-	@PostMapping("/reset-password")
-	public ResponseEntity<String> resetPassword(@Valid @RequestBody PasswordResetDto passwordResetDto) throws RegisterLoginException {
-		return ResponseEntity.ok(resetPasswordService.resetPassword(passwordResetDto));
+	@PostMapping("/verify-otp")
+	public ResponseEntity<String> resetPassword(@Valid @RequestBody VerifyOtpDto verifyOtpDto)
+			throws RegisterLoginException {
+		return ResponseEntity.ok(resetPasswordService.verifyOtp(verifyOtpDto));
 	}
+
+	@PostMapping("/resetPassword")
+	public ResponseEntity<String> updatePassword(@Valid @RequestBody ResetPasswordDto newPassword)
+			throws RegisterLoginException {
+		return ResponseEntity.ok(resetPasswordService.changePasswordWithOtp(newPassword));
+	}
+
 }

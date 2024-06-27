@@ -10,7 +10,8 @@ public class RegisterLoginExceptionHandler {
 	@ExceptionHandler(value = { RegisterLoginException.class })
 	public ResponseEntity<Object> handleRegisterLoginException(RegisterLoginException registerLoginException) {
 		return ResponseEntity.status(registerLoginException.getHttpStatus()).body(registerLoginException.getMessage());
-
 	}
+	
+	
 
 }

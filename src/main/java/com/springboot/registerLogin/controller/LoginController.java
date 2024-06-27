@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.springboot.registerLogin.exception.RegisterLoginException;
 import com.springboot.registerLogin.request.UserLoginRequestDto;
 import com.springboot.registerLogin.service.LoginService;
 import jakarta.validation.Valid;
@@ -24,13 +25,12 @@ public class LoginController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<String> loginUser(@Valid @RequestBody UserLoginRequestDto userLoginDto) {
+	public ResponseEntity<String> loginUser(@Valid @RequestBody UserLoginRequestDto userLoginDto)
+			throws RegisterLoginException {
 		String response = loginService.loginUser(userLoginDto);
-		if (response.equals("User logged in successfully.")) {
-			return ResponseEntity.status(HttpStatus.OK).body(response);
-		} else {
-			return ResponseEntity.status(401).body(response);
-		}
+
+		return ResponseEntity.status(HttpStatus.OK).body(response);
+
 	}
 
 }
