@@ -2,6 +2,7 @@ package com.springboot.registerLogin.request;
 
 import jakarta.validation.constraints.NotEmpty;
 
+
 public class GenerateOtpDto {
 	 @NotEmpty
 	    private String email;
@@ -13,5 +14,12 @@ public class GenerateOtpDto {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	@Override
+	public String toString() {
+		return "GenerateOtpDto [email=" + email + "]";
+	}
+	
+	
 
 }

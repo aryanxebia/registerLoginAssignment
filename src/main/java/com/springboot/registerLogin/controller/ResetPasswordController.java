@@ -15,7 +15,7 @@ import com.springboot.registerLogin.service.ResetPasswordService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1")
 public class ResetPasswordController {
 
 	private final ResetPasswordService resetPasswordService;

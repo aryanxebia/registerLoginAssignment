@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 import com.springboot.registerLogin.dao.RegisterUserRepository;
 import com.springboot.registerLogin.entity.Users;
 import com.springboot.registerLogin.exception.RegisterLoginException;
-import com.springboot.registerLogin.request.GenerateOtpDto;
 import com.springboot.registerLogin.service.GenerateOtpService;
 
 @Service
 public class GenerateOtpServiceImlp implements GenerateOtpService {
+	
 	public static String generateOTP() {
 		SecureRandom random = new SecureRandom();
 		int otp = 100000 + random.nextInt(900000);
@@ -30,11 +30,11 @@ public class GenerateOtpServiceImlp implements GenerateOtpService {
 	}
 
 	@Override
-	public String generateOtp(GenerateOtpDto email) throws RegisterLoginException {
+	public String generateOtp(String email) throws RegisterLoginException {
 
-		Optional<Users> optionalUser = registerUserRepository.findByEmail(email.getEmail());
+		Optional<Users> optionalUser = registerUserRepository.findByEmail(email);
 		if (!optionalUser.isPresent()) {
-			throw new RegisterLoginException(HttpStatus.BAD_REQUEST, "User not found.");
+			throw new RegisterLoginException(HttpStatus.NOT_FOUND, "User not found.");
 		}
 		Users user = optionalUser.get();
 		String otp = generateOTP();
