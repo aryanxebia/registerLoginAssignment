@@ -1,16 +1,18 @@
 package com.springboot.registerLogin.request;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 
-public class PasswordResetDto {
-    @NotEmpty
-    private String email;
+public class ChangePasswordDto {
+	@NotEmpty
+	private String email;
 
-    @NotEmpty
-    private String currentPassword;
+	@NotEmpty
+	private String currentPassword;
 
-    @NotEmpty
-    private String newPassword;
+	@NotEmpty(message = "New password cannot be empty")
+	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$", message = "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number")
+	private String newPassword;
 
 	public String getEmail() {
 		return email;

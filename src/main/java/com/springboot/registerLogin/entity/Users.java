@@ -37,16 +37,60 @@ public class Users implements Serializable {
 	private String phoneNumber;
 
 	@Column
-	private boolean isBlocked;
+	private boolean isBlocked = false;
 
 	@Column
-	private LocalDateTime blockedDate;
+	private LocalDateTime blockedDate = null;
 
 	@Column
-	private Integer numberOfAttempts;
+	private Integer numberOfAttempts = 0;
 
 	@Column
 	private String password;
+
+	@Column
+	private String otpValue;
+
+	@Column
+	private LocalDateTime otpGenerationTime;
+
+	@Column
+	private boolean isOtpVerified = false;
+
+	@Column
+	private boolean isLoggedIn = false;
+
+	public String getOtpValue() {
+		return otpValue;
+	}
+
+	public void setOtpValue(String otpValue) {
+		this.otpValue = otpValue;
+	}
+
+	public LocalDateTime getOtpGenerationTime() {
+		return otpGenerationTime;
+	}
+
+	public void setOtpGenerationTime(LocalDateTime otpGenerationTime) {
+		this.otpGenerationTime = otpGenerationTime;
+	}
+
+	public boolean isOtpVerified() {
+		return isOtpVerified;
+	}
+
+	public void setOtpVerified(boolean isOtpVerified) {
+		this.isOtpVerified = isOtpVerified;
+	}
+
+	public boolean isLoggedIn() {
+		return isLoggedIn;
+	}
+
+	public void setLoggedIn(boolean isLoggedIn) {
+		this.isLoggedIn = isLoggedIn;
+	}
 
 	public String getPassword() {
 		return password;

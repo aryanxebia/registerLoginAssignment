@@ -1,28 +1,23 @@
 package com.springboot.registerLogin.request;
 
-import java.time.LocalDateTime;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 public class UserRegisterationRequestDto {
-    @NotNull
-    private String email;
+	@NotNull
+	private String email;
 
-    @NotEmpty(message = "Please enter a valid first name")
-    private String firstName;
+	@NotEmpty(message = "Please enter a valid first name")
+	private String firstName;
 
-    private String lastName;
+	private String lastName;
 
-    private String phoneNumber;
+	private String phoneNumber;
 
-    private boolean isBlocked;
-
-    private LocalDateTime blockedTime;
-
-    private Integer numberOfAttempts;
-
-    @NotEmpty(message = "Please enter a valid password")
-    private String password;
+	@NotEmpty(message = "Password cannot be empty")
+	@Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$", message = "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number")
+	private String password;
 
 	public String getEmail() {
 		return email;
@@ -54,30 +49,6 @@ public class UserRegisterationRequestDto {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
-	}
-
-	public boolean isBlocked() {
-		return isBlocked;
-	}
-
-	public void setBlocked(boolean isBlocked) {
-		this.isBlocked = isBlocked;
-	}
-
-	public LocalDateTime getBlockedTime() {
-		return blockedTime;
-	}
-
-	public void setBlockedTime(LocalDateTime blockedTime) {
-		this.blockedTime = blockedTime;
-	}
-
-	public Integer getNumberOfAttempts() {
-		return numberOfAttempts;
-	}
-
-	public void setNumberOfAttempts(Integer numberOfAttempts) {
-		this.numberOfAttempts = numberOfAttempts;
 	}
 
 	public String getPassword() {
